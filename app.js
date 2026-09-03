@@ -12,14 +12,20 @@
     tg.ready();
     tg.expand();
     if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+    try {
+      if (tg.setHeaderColor) tg.setHeaderColor('#0f1015');
+    } catch (e) {}
+    try {
+      if (tg.setBackgroundColor) tg.setBackgroundColor('#0f1015');
+    } catch (e) {}
   }
 
-  // App State
+  // App State: 25 Stars = 0.5 GRAM (1 Star = 0.02 GRAM, 1 GRAM = $1.00 USD)
   const STATE = {
     gramBalance: 0.00,
-    gramPrice: 1.6000,
+    gramPrice: 1.0000,
     priceChange24h: 5.84,
-    starUsdRate: 0.02, // 1 Star = $0.02
+    starUsdRate: 0.02, // 1 Star = $0.02, 25 Stars = 0.50 GRAM ($0.50 USD)
     activeTimeframe: '15m',
     selectedOrderType: 'long', // 'long' or 'short'
     selectedLeverage: 10,
@@ -167,30 +173,19 @@
     }
   }
 
-  // Split.tg API Fetch — live TON price to convert Stars → GRAM correctly
+  // Split.tg API Fetch — check live TON rate for analytics
   async function fetchSplitTgRates() {
     try {
-      // 1 Star = 0.013 USD (Telegram official rate)
-      // Split.tg returns TON price in USD as { message: "5.12" } or similar
       const response = await fetch('https://api.split.tg/buy/ton_rate');
       if (response.ok) {
         const data = await response.json();
-        // data.message is the TON price in USD (e.g. "5.20")
         const tonUsd = parseFloat(data?.message || data?.price || data?.rate);
         if (tonUsd && tonUsd > 0) {
-          // GRAM/TON ratio from market. GRAM price ≈ 0.01–0.02 TON per GRAM
-          // Real GRAM price in USD = tonUsd * gramTonPrice
-          // We'll just update starUsdRate from the TON price:
-          // 1 Star officially = 1/67 TON ≈ 0.0149 TON
-          const starInTon = 1 / 67;
-          STATE.starUsdRate = starInTon * tonUsd; // e.g. 0.0149 * 5.2 ≈ $0.077 per star
-          console.log(`Split.tg: 1 TON = $${tonUsd}, 1 Star ≈ $${STATE.starUsdRate.toFixed(4)}`);
-          // Re-render packages with updated rates
-          renderStarsPackages();
+          console.log(`Split.tg TON rate: $${tonUsd}`);
         }
       }
     } catch (err) {
-      console.log('Using default rates for GRAM');
+      console.log('Using fixed rate: 25 Stars = 0.5 GRAM');
     }
   }
 
