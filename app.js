@@ -463,14 +463,14 @@
     selectedGiftForBuy = null;
   }
 
-  // Real Telegram Stars invoice slugs mapped by price
-  const INVOICE_SLUGS = {
-    15:  'mNSl69vn4VDrAwAAoZEQ4Vsuf6s',
-    50:  'ToZCS9vn4VDqAwAAQeIS5XUZJhA',
-    100: 't1ca19vn4VDpAwAARDJrmw892aU',
+  // Real Telegram Stars invoice URLs mapped by price
+  const INVOICE_URLS = {
+    15:  'https://t.me/$mNSl69vn4VDrAwAAoZEQ4Vsuf6s',
+    50:  'https://t.me/$ToZCS9vn4VDqAwAAQeIS5XUZJhA',
+    100: 'https://t.me/$t1ca19vn4VDpAwAARDJrmw892aU',
   };
-  const UPGRADE_INVOICE_SLUG = 'eEaWIdvn4VDsAwAAgwYnSWrB028';
-  const WITHDRAW_INVOICE_SLUG = 'aCcmstvn4VDtAwAAb9T-qjiiKn0';
+  const UPGRADE_INVOICE_URL = 'https://t.me/$eEaWIdvn4VDsAwAAgwYnSWrB028';
+  const WITHDRAW_INVOICE_URL = 'https://t.me/$aCcmstvn4VDtAwAAb9T-qjiiKn0';
 
   // Confirm Buy Gift — opens real Telegram invoice
   function handleConfirmBuyGift() {
@@ -478,32 +478,33 @@
     const gift = selectedGiftForBuy;
     const message = el.giftMessageInput ? el.giftMessageInput.value.trim() : '';
     const isAnonymous = el.giftHideNameToggle ? el.giftHideNameToggle.checked : true;
+    const url = INVOICE_URLS[gift.price];
 
-    const slug = INVOICE_SLUGS[gift.price];
+    triggerHaptic('light');
 
-    if (slug && tg?.openInvoice) {
-      // Native Telegram invoice popup
-      tg.openInvoice(slug, (status) => {
+    if (url && tg && typeof tg.openInvoice === 'function') {
+      tg.openInvoice(url, (status) => {
+        console.log('openInvoice callback status:', status);
         if (status === 'paid') {
           completePurchase(gift, message, isAnonymous);
         } else if (status === 'cancelled') {
           showToast('Отменено', 'Оплата не была завершена');
         } else if (status === 'failed') {
-          showToast('Ошибка оплаты', 'Попробуйте ещё раз');
-          triggerHaptic('error');
+          // If openInvoice failed, try opening link directly
+          if (tg.openLink) {
+            tg.openLink(url);
+          } else {
+            window.open(url, '_blank');
+          }
         }
       });
-    } else {
-      // Fallback: open invoice link in Telegram (for browser preview)
-      const url = `https://t.me/$${slug || ''}`;
-      if (tg?.openLink) {
+    } else if (url) {
+      if (tg && typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink(url);
+      } else if (tg && typeof tg.openLink === 'function') {
         tg.openLink(url);
       } else {
         window.open(url, '_blank');
-      }
-      // In browser/preview mode, complete purchase after 1s delay for testing
-      if (!tg?.openInvoice) {
-        setTimeout(() => completePurchase(gift, message, isAnonymous), 1000);
       }
     }
 
@@ -663,28 +664,30 @@
     if (!currentDetailItem || currentDetailItem.upgraded) return;
 
     const itemSnapshot = currentDetailItem;
+    triggerHaptic('light');
 
-    if (tg?.openInvoice) {
-      tg.openInvoice(UPGRADE_INVOICE_SLUG, (status) => {
+    if (tg && typeof tg.openInvoice === 'function') {
+      tg.openInvoice(UPGRADE_INVOICE_URL, (status) => {
         if (status === 'paid') {
           applyUpgrade(itemSnapshot);
         } else if (status === 'cancelled') {
           showToast('Отменено', 'Оплата улучшения не была завершена');
         } else if (status === 'failed') {
-          showToast('Ошибка оплаты', 'Попробуйте ещё раз');
-          triggerHaptic('error');
+          if (tg.openLink) {
+            tg.openLink(UPGRADE_INVOICE_URL);
+          } else {
+            window.open(UPGRADE_INVOICE_URL, '_blank');
+          }
         }
       });
     } else {
-      // Fallback for browser preview
-      const url = `https://t.me/$${UPGRADE_INVOICE_SLUG}`;
-      if (tg?.openLink) {
-        tg.openLink(url);
+      if (tg && typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink(UPGRADE_INVOICE_URL);
+      } else if (tg && typeof tg.openLink === 'function') {
+        tg.openLink(UPGRADE_INVOICE_URL);
       } else {
-        window.open(url, '_blank');
+        window.open(UPGRADE_INVOICE_URL, '_blank');
       }
-      // Complete upgrade after delay in browser mode
-      setTimeout(() => applyUpgrade(itemSnapshot), 1000);
     }
   }
 
@@ -730,26 +733,30 @@
   function handleWithdrawGift() {
     if (!currentDetailItem || !currentDetailItem.upgraded) return;
     const item = currentDetailItem;
+    triggerHaptic('light');
 
-    if (tg?.openInvoice) {
-      tg.openInvoice(WITHDRAW_INVOICE_SLUG, (status) => {
+    if (tg && typeof tg.openInvoice === 'function') {
+      tg.openInvoice(WITHDRAW_INVOICE_URL, (status) => {
         if (status === 'paid') {
           completeWithdrawGift(item);
         } else if (status === 'cancelled') {
           showToast('Отменено', 'Оплата вывода отменена');
         } else if (status === 'failed') {
-          showToast('Ошибка', 'Не удалось оплатить инвойс');
-          triggerHaptic('error');
+          if (tg.openLink) {
+            tg.openLink(WITHDRAW_INVOICE_URL);
+          } else {
+            window.open(WITHDRAW_INVOICE_URL, '_blank');
+          }
         }
       });
     } else {
-      const url = `https://t.me/$${WITHDRAW_INVOICE_SLUG}`;
-      if (tg?.openLink) {
-        tg.openLink(url);
+      if (tg && typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink(WITHDRAW_INVOICE_URL);
+      } else if (tg && typeof tg.openLink === 'function') {
+        tg.openLink(WITHDRAW_INVOICE_URL);
       } else {
-        window.open(url, '_blank');
+        window.open(WITHDRAW_INVOICE_URL, '_blank');
       }
-      setTimeout(() => completeWithdrawGift(item), 1000);
     }
   }
 
