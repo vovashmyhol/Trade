@@ -17,112 +17,163 @@
 <body>
   <div class="app-container">
     
-    <!-- Main Blue Gradient Card (Matching screenshot) -->
-    <section class="card-wrapper">
-      <div class="trade-card" id="tradeCard">
-        
-        <!-- Stars Overlay matching photo positions -->
-        <div class="card-stars-layer">
-          <span class="c-star" style="top: 13%; left: 10%; font-size: 11px; opacity: 0.65;">✦</span>
-          <span class="c-star" style="top: 11%; left: 34%; font-size: 13px; opacity: 0.75;">✦</span>
-          <span class="c-star" style="top: 22%; left: 44%; font-size: 10px; opacity: 0.55;">✦</span>
-          <span class="c-star" style="top: 14%; left: 74%; font-size: 12px; opacity: 0.7;">✦</span>
-          <span class="c-star" style="top: 50%; left: 47%; font-size: 10px; opacity: 0.5;">✦</span>
-          <span class="c-star" style="top: 54%; left: 63%; font-size: 12px; opacity: 0.65;">✦</span>
-          <span class="c-star" style="top: 64%; left: 78%; font-size: 11px; opacity: 0.6;">✦</span>
-          <span class="c-dot" style="top: 28%; left: 24%;"></span>
-          <span class="c-dot" style="top: 42%; left: 35%;"></span>
-          <span class="c-dot" style="top: 68%; left: 54%;"></span>
-          <span class="c-dot" style="top: 72%; left: 28%;"></span>
-          <span class="c-dot" style="top: 38%; left: 82%;"></span>
-        </div>
+    <!-- Top Nav Switcher: Gifts | Wallet (Matching Image 1) -->
+    <div class="top-nav-switcher">
+      <div class="switcher-track">
+        <button class="switcher-btn active" id="navGiftsBtn">Gifts</button>
+        <button class="switcher-btn" id="navWalletBtn">Wallet</button>
+      </div>
+    </div>
 
-        <!-- Top Card Row: Balance & Chip -->
-        <div class="card-top">
-          <div class="card-balance-block">
-            <div class="card-gram-row">
-              <img src="gram-icon.png" alt="GRAM" class="diamond-icon">
-              <span class="card-amount" id="cardGramAmount">0.00</span>
-              <span class="card-currency">GRAM</span>
-            </div>
-            <div class="card-usd" id="cardUsdAmount">$0.00</div>
+    <!-- ==================== WALLET TAB VIEW ==================== -->
+    <div class="tab-view" id="walletTabView">
+
+      <!-- Main Blue Gradient Card (Matching screenshot) -->
+      <section class="card-wrapper">
+        <div class="trade-card" id="tradeCard">
+          
+          <!-- Stars Overlay matching photo positions -->
+          <div class="card-stars-layer">
+            <span class="c-star" style="top: 13%; left: 10%; font-size: 11px; opacity: 0.65;">✦</span>
+            <span class="c-star" style="top: 11%; left: 34%; font-size: 13px; opacity: 0.75;">✦</span>
+            <span class="c-star" style="top: 22%; left: 44%; font-size: 10px; opacity: 0.55;">✦</span>
+            <span class="c-star" style="top: 14%; left: 74%; font-size: 12px; opacity: 0.7;">✦</span>
+            <span class="c-star" style="top: 50%; left: 47%; font-size: 10px; opacity: 0.5;">✦</span>
+            <span class="c-star" style="top: 54%; left: 63%; font-size: 12px; opacity: 0.65;">✦</span>
+            <span class="c-star" style="top: 64%; left: 78%; font-size: 11px; opacity: 0.6;">✦</span>
+            <span class="c-dot" style="top: 28%; left: 24%;"></span>
+            <span class="c-dot" style="top: 42%; left: 35%;"></span>
+            <span class="c-dot" style="top: 68%; left: 54%;"></span>
+            <span class="c-dot" style="top: 72%; left: 28%;"></span>
+            <span class="c-dot" style="top: 38%; left: 82%;"></span>
           </div>
 
-          <!-- Chip and 2-Column Vertical Serial -->
-          <div class="card-chip-container">
-            <div class="card-chip">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect x="2" y="2" width="8" height="8" rx="2.5" stroke="#7194b7" stroke-width="2"/>
-                <rect x="14" y="2" width="8" height="8" rx="2.5" stroke="#7194b7" stroke-width="2"/>
-                <rect x="2" y="14" width="8" height="8" rx="2.5" stroke="#7194b7" stroke-width="2"/>
-                <circle cx="16" cy="16" r="1.3" fill="#7194b7"/>
-                <circle cx="20" cy="16" r="1.3" fill="#7194b7"/>
-                <circle cx="16" cy="20" r="1.3" fill="#7194b7"/>
-                <circle cx="20" cy="20" r="1.3" fill="#7194b7"/>
-              </svg>
+          <!-- Top Card Row: Balance & Chip -->
+          <div class="card-top">
+            <div class="card-balance-block">
+              <div class="card-gram-row">
+                <img src="gram-icon.png" alt="GRAM" class="diamond-icon">
+                <span class="card-amount" id="cardGramAmount">0.00</span>
+                <span class="card-currency">GRAM</span>
+              </div>
+              <div class="card-usd" id="cardUsdAmount">$0.00</div>
             </div>
-            
-            <div class="card-serial-cols">
-              <div class="serial-col">UOAL 1DVI V82P SSUL NYPX JENP</div>
-              <div class="serial-col">JORF AHRV GKHM HFOR IJYI NOYK</div>
+
+            <!-- Chip and 2-Column Vertical Serial -->
+            <div class="card-chip-container">
+              <div class="card-chip">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="2" width="8" height="8" rx="2.5" stroke="#7194b7" stroke-width="2"/>
+                  <rect x="14" y="2" width="8" height="8" rx="2.5" stroke="#7194b7" stroke-width="2"/>
+                  <rect x="2" y="14" width="8" height="8" rx="2.5" stroke="#7194b7" stroke-width="2"/>
+                  <circle cx="16" cy="16" r="1.3" fill="#7194b7"/>
+                  <circle cx="20" cy="16" r="1.3" fill="#7194b7"/>
+                  <circle cx="16" cy="20" r="1.3" fill="#7194b7"/>
+                  <circle cx="20" cy="20" r="1.3" fill="#7194b7"/>
+                </svg>
+              </div>
+              
+              <div class="card-serial-cols">
+                <div class="serial-col">UOAL 1DVI V82P SSUL NYPX JENP</div>
+                <div class="serial-col">JORF AHRV GKHM HFOR IJYI NOYK</div>
+              </div>
             </div>
+          </div>
+
+          <!-- Bottom Card Row: Cardholder Name -->
+          <div class="card-bottom">
+            <div class="card-holder-name" id="cardHolderName">ALICIA TORREAUX</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Main Action Buttons (Add Funds & Trade) -->
+      <section class="action-buttons-row">
+        <button class="action-btn btn-primary" id="btnOpenAddFunds">
+          <span>Add Funds</span>
+        </button>
+
+        <button class="action-btn btn-trade" id="btnOpenTrade">
+          <span>Trade</span>
+        </button>
+      </section>
+
+      <!-- Features Section for Trade Wallet -->
+      <section class="features-section">
+        <div class="feature-item">
+          <div class="feature-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+              <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
+          </div>
+          <div class="feature-content">
+            <div class="feature-title">Futures Trading up to 50x</div>
+            <div class="feature-desc">Open Long & Short positions on GRAM with live charts and real-time PnL.</div>
           </div>
         </div>
 
-        <!-- Bottom Card Row: Cardholder Name -->
-        <div class="card-bottom">
-          <div class="card-holder-name" id="cardHolderName">ALICIA TORREAUX</div>
+        <div class="feature-item">
+          <div class="feature-icon-box">
+            <img src="stars-icon.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Stars">
+          </div>
+          <div class="feature-content">
+            <div class="feature-title">Instant Stars Top-Up</div>
+            <div class="feature-desc">Convert Telegram Stars directly to GRAM at live rates powered by Split.tg.</div>
+          </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- Main Action Buttons (Add Funds & Trade) -->
-    <section class="action-buttons-row">
-      <button class="action-btn btn-primary" id="btnOpenAddFunds">
-        <span>Add Funds</span>
-      </button>
-
-      <button class="action-btn btn-trade" id="btnOpenTrade">
-        <span>Trade</span>
-      </button>
-    </section>
-
-    <!-- Features Section for Trade Wallet -->
-    <section class="features-section">
-      <div class="feature-item">
-        <div class="feature-icon-box">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-            <polyline points="16 7 22 7 22 13"></polyline>
-          </svg>
+        <div class="feature-item">
+          <div class="feature-icon-box percent">
+            0%
+          </div>
+          <div class="feature-content">
+            <div class="feature-title">Zero Deposit Fees</div>
+            <div class="feature-desc">Instant free top-ups with fast order execution and transparent market rates.</div>
+          </div>
         </div>
-        <div class="feature-content">
-          <div class="feature-title">Futures Trading up to 50x</div>
-          <div class="feature-desc">Open Long & Short positions on GRAM with live charts and real-time PnL.</div>
-        </div>
-      </div>
+      </section>
 
-      <div class="feature-item">
-        <div class="feature-icon-box">
-          <img src="stars-icon.png" style="width: 22px; height: 22px; object-fit: contain;" alt="Stars">
-        </div>
-        <div class="feature-content">
-          <div class="feature-title">Instant Stars Top-Up</div>
-          <div class="feature-desc">Convert Telegram Stars directly to GRAM at live rates powered by Split.tg.</div>
-        </div>
+    </div>
+
+    <!-- ==================== GIFTS TAB VIEW ==================== -->
+    <div class="tab-view active" id="giftsTabView">
+      
+      <!-- Sub-Navigation: Catalog (6) | Inventory (0) -->
+      <div class="gifts-subnav">
+        <button class="gifts-subnav-btn active" id="subnavCatalogBtn">
+          <span>Каталог</span>
+          <span class="subnav-badge" id="catalogCountBadge">6</span>
+        </button>
+        <button class="gifts-subnav-btn" id="subnavInventoryBtn">
+          <span>Инвентарь</span>
+          <span class="subnav-badge" id="inventoryCountBadge">0</span>
+        </button>
       </div>
 
-      <div class="feature-item">
-        <div class="feature-icon-box percent">
-          0%
-        </div>
-        <div class="feature-content">
-          <div class="feature-title">Zero Deposit Fees</div>
-          <div class="feature-desc">Instant free top-ups with fast order execution and transparent market rates.</div>
+      <!-- STORE CATALOG VIEW (3-Columns Grid matching Image 2) -->
+      <div class="gifts-catalog-section" id="giftsCatalogSection">
+        <div class="gifts-grid" id="giftsGrid">
+          <!-- Dynamically populated 6 gifts -->
         </div>
       </div>
-    </section>
+
+      <!-- INVENTORY VIEW -->
+      <div class="gifts-inventory-section" id="giftsInventorySection" style="display: none;">
+        <div class="inventory-empty-state" id="inventoryEmptyState">
+          <div class="empty-gift-icon">🎁</div>
+          <div class="empty-title">Инвентарь пуст</div>
+          <div class="empty-desc">У вас пока нет купленных подарков. Выберите понравившийся подарок в каталоге.</div>
+          <button class="empty-shop-btn" id="btnGoToShop">Перейти в каталог</button>
+        </div>
+
+        <div class="inventory-grid" id="inventoryGrid" style="display: none;">
+          <!-- Dynamically populated user owned gifts -->
+        </div>
+      </div>
+
+    </div>
 
   </div>
 
@@ -300,6 +351,122 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ==================== GIFT PURCHASE MODAL (Matching Image 3) ==================== -->
+  <div class="bottom-sheet-backdrop" id="giftBuyBackdrop">
+    <div class="bottom-sheet gift-buy-modal" id="giftBuySheet">
+      <div class="sheet-handle-bar"></div>
+
+      <!-- Modal Top Bar -->
+      <div class="gift-modal-top-bar">
+        <button class="gift-modal-close-circle" id="btnCloseGiftBuy">✕</button>
+        <div class="gift-modal-top-title" id="giftModalTopTitle">Вы покупаете подарок стоимостью 15 звёзд</div>
+      </div>
+
+      <!-- Center Gift Card (Matching Image 3) -->
+      <div class="gift-card-spotlight">
+        <div class="gift-spotlight-img-box">
+          <img src="Gifts/Lol Pop.png" id="giftModalImg" alt="Gift">
+        </div>
+        <div class="gift-spotlight-title" id="giftModalTitle">Купленный подарок</div>
+        <div class="gift-spotlight-desc">
+          Добавьте его в свой профиль или обменяйте на <span id="giftModalExchangeStars">13</span> звёзд.
+        </div>
+        <button class="gift-spotlight-view-btn" id="btnSpotlightPreview">
+          <span>Посмотреть</span>
+          <span style="font-size: 11px;">✦</span>
+        </button>
+      </div>
+
+      <!-- Message input -->
+      <div class="gift-message-box">
+        <input type="text" class="gift-message-input" id="giftMessageInput" placeholder="Ваше сообщение (необязательно)" maxlength="120">
+      </div>
+
+      <!-- Hide My Name Toggle (Matching Image 3) -->
+      <div class="gift-privacy-card">
+        <div class="privacy-row">
+          <span class="privacy-label">Скрыть моё имя</span>
+          <label class="ios-switch">
+            <input type="checkbox" id="giftHideNameToggle" checked>
+            <span class="ios-slider"></span>
+          </label>
+        </div>
+        <div class="privacy-hint">
+          Вы можете скрыть своё имя и сообщение от всех, кто просматривает Ваш профиль.
+        </div>
+      </div>
+
+      <!-- Big Blue Buy Button -->
+      <button class="gift-buy-confirm-btn" id="btnConfirmBuyGift">
+        Купить подарок за <img src="stars-icon.png" class="btn-star-icon" alt="Stars"> 15
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ==================== INVENTORY GIFT DETAIL / UPGRADE MODAL ==================== -->
+  <div class="bottom-sheet-backdrop" id="giftDetailBackdrop">
+    <div class="bottom-sheet gift-detail-sheet" id="giftDetailSheet">
+      <div class="sheet-handle-bar"></div>
+
+      <!-- Top bar -->
+      <div class="gift-modal-top-bar">
+        <button class="gift-modal-close-circle" id="btnCloseGiftDetail">✕</button>
+        <div class="gift-modal-top-title" id="giftDetailTopTitle">Информация о подарке</div>
+      </div>
+
+      <!-- Card container (upgraded / regular state) -->
+      <div class="inventory-gift-hero" id="inventoryGiftHero">
+        <!-- Question marks background pattern (shown when upgraded) -->
+        <div class="gift-qmark-pattern" id="giftQmarkPattern">
+          <span>?</span><span>?</span><span>?</span><span>?</span><span>?</span>
+          <span>?</span><span>?</span><span>?</span><span>?</span><span>?</span>
+          <span>?</span><span>?</span><span>?</span><span>?</span><span>?</span>
+          <span>?</span><span>?</span><span>?</span><span>?</span><span>?</span>
+        </div>
+
+        <div class="gift-hero-badge-row">
+          <div class="gift-serial-tag" id="giftSerialTag" style="display: none;">#00000</div>
+          <div class="gift-status-tag" id="giftStatusTag">Обычный</div>
+        </div>
+
+        <div class="gift-hero-img-wrap">
+          <img src="" id="giftDetailImg" alt="Gift" class="gift-hero-img">
+        </div>
+
+        <div class="gift-hero-name" id="giftDetailName">Подарок</div>
+        <div class="gift-hero-details-row">
+          <div class="gift-hero-pill">
+            <span class="pill-label">Стоимость:</span>
+            <span class="pill-val" id="giftDetailPrice">15 <img src="stars-icon.png" class="mini-star-icon" alt="⭐️"></span>
+          </div>
+          <div class="gift-hero-pill">
+            <span class="pill-label">Обмен:</span>
+            <span class="pill-val" id="giftDetailExchange">13 <img src="stars-icon.png" class="mini-star-icon" alt="⭐️"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upgrade Button (Blue) -->
+      <button class="btn-gift-upgrade" id="btnUpgradeGift">
+        <span>Улучшить</span>
+        <span class="btn-upgrade-price">25 <img src="stars-icon.png" class="btn-star-icon" alt="Stars"></span>
+      </button>
+
+      <!-- Instant Withdraw Button (Shown when upgraded) -->
+      <button class="btn-gift-withdraw" id="btnWithdrawGift" style="display: none;">
+        <span>Мгновенный вывод</span>
+        <span class="btn-upgrade-price">150 <img src="stars-icon.png" class="btn-star-icon" alt="Stars"></span>
+      </button>
+
+      <!-- Transfer Button (Shown when upgraded) -->
+      <button class="btn-gift-transfer" id="btnTransferGift" style="display: none;">
+        Передать
+      </button>
+
+    </div>
   </div>
 
   <!-- Toast Notification -->
