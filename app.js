@@ -50,6 +50,18 @@
     { stars: 10000, url: 'https://t.me/$iPxPiXBVyVAMBgAAoWBZp2XD2yo' }
   ];
 
+  // Gifts Catalog Data (6 Gifts as requested)
+  const GIFTS_DATA = [
+    { id: 'eternal_rose', name: 'Eternal Rose', price: 100, exchange: 85, image: 'Gifts/Eternal Rose.png' },
+    { id: 'hex_pot', name: 'Hex Pot', price: 15, exchange: 13, image: 'Gifts/Hex Pot.png' },
+    { id: 'lol_pop', name: 'Lol Pop', price: 15, exchange: 13, image: 'Gifts/Lol Pop.png' },
+    { id: 'record_player', name: 'Record Player', price: 50, exchange: 42, image: 'Gifts/Record Player.png' },
+    { id: 'sakura_flower', name: 'Sakura Flower', price: 15, exchange: 13, image: 'Gifts/Sakura Flower.png' },
+    { id: 'spy_agaric', name: 'Spy Agaric', price: 15, exchange: 13, image: 'Gifts/Spy Agaric.png' }
+  ];
+
+  let selectedGiftForBuy = null;
+
   // ==================== DOM ELEMENTS ====================
   const el = {
     userName: document.getElementById('userName'),
@@ -61,6 +73,54 @@
     tickerChange: document.getElementById('tickerChange'),
     marketTickerCard: document.getElementById('marketTickerCard'),
     
+    // Top Nav Switcher (Gifts | Wallet)
+    navGiftsBtn: document.getElementById('navGiftsBtn'),
+    navWalletBtn: document.getElementById('navWalletBtn'),
+    walletTabView: document.getElementById('walletTabView'),
+    giftsTabView: document.getElementById('giftsTabView'),
+    
+    // Gifts Subnav & Sections
+    subnavCatalogBtn: document.getElementById('subnavCatalogBtn'),
+    subnavInventoryBtn: document.getElementById('subnavInventoryBtn'),
+    giftsCatalogSection: document.getElementById('giftsCatalogSection'),
+    giftsInventorySection: document.getElementById('giftsInventorySection'),
+    catalogCountBadge: document.getElementById('catalogCountBadge'),
+    inventoryCountBadge: document.getElementById('inventoryCountBadge'),
+    giftsGrid: document.getElementById('giftsGrid'),
+    inventoryGrid: document.getElementById('inventoryGrid'),
+    inventoryEmptyState: document.getElementById('inventoryEmptyState'),
+    btnGoToShop: document.getElementById('btnGoToShop'),
+
+    // Gift Buy Modal
+    giftBuyBackdrop: document.getElementById('giftBuyBackdrop'),
+    giftBuySheet: document.getElementById('giftBuySheet'),
+    btnCloseGiftBuy: document.getElementById('btnCloseGiftBuy'),
+    giftModalTopTitle: document.getElementById('giftModalTopTitle'),
+    giftModalImg: document.getElementById('giftModalImg'),
+    giftModalTitle: document.getElementById('giftModalTitle'),
+    giftModalExchangeStars: document.getElementById('giftModalExchangeStars'),
+    btnSpotlightPreview: document.getElementById('btnSpotlightPreview'),
+    giftMessageInput: document.getElementById('giftMessageInput'),
+    giftHideNameToggle: document.getElementById('giftHideNameToggle'),
+    btnConfirmBuyGift: document.getElementById('btnConfirmBuyGift'),
+
+    // Gift Detail / Upgrade Modal (Inventory)
+    giftDetailBackdrop: document.getElementById('giftDetailBackdrop'),
+    giftDetailSheet: document.getElementById('giftDetailSheet'),
+    btnCloseGiftDetail: document.getElementById('btnCloseGiftDetail'),
+    giftDetailTopTitle: document.getElementById('giftDetailTopTitle'),
+    inventoryGiftHero: document.getElementById('inventoryGiftHero'),
+    giftQmarkPattern: document.getElementById('giftQmarkPattern'),
+    giftSerialTag: document.getElementById('giftSerialTag'),
+    giftStatusTag: document.getElementById('giftStatusTag'),
+    giftDetailImg: document.getElementById('giftDetailImg'),
+    giftDetailName: document.getElementById('giftDetailName'),
+    giftDetailPrice: document.getElementById('giftDetailPrice'),
+    giftDetailExchange: document.getElementById('giftDetailExchange'),
+    btnUpgradeGift: document.getElementById('btnUpgradeGift'),
+    btnWithdrawGift: document.getElementById('btnWithdrawGift'),
+    btnTransferGift: document.getElementById('btnTransferGift'),
+
     // Bottom Sheet (Top Up Lines)
     btnOpenAddFunds: document.getElementById('btnOpenAddFunds'),
     btnCloseAddFunds: document.getElementById('btnCloseAddFunds'),
@@ -110,6 +170,8 @@
     loadSavedState();
     setupTelegramUser();
     renderStarsPackages();
+    renderGiftsGrid();
+    renderInventory();
     setupEventListeners();
     fetchSplitTgRates();
     initPriceChart();
@@ -332,6 +394,374 @@
       window.open(invoiceUrl, '_blank');
       onPaymentSuccess();
     }
+  }
+
+  // ==================== GIFTS STORE & INVENTORY ====================
+
+  // Render Gifts Catalog Grid (Matching Image 2)
+  function renderGiftsGrid() {
+    if (!el.giftsGrid) return;
+    el.giftsGrid.innerHTML = '';
+
+    GIFTS_DATA.forEach(gift => {
+      const card = document.createElement('div');
+      card.className = 'gift-card';
+      
+      card.innerHTML = `
+        <div class="gift-card-img-wrap">
+          <img src="${encodeURI(gift.image)}" alt="${gift.name}" class="gift-card-img" loading="lazy">
+        </div>
+        <div class="gift-price-pill">
+          <div class="sparkle-emitter">
+            <span class="tg-sparkle spk-tl"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffd752"/></svg></span>
+            <span class="tg-sparkle spk-t"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffea88"/></svg></span>
+            <span class="tg-sparkle spk-tr"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffd752"/></svg></span>
+            <span class="tg-sparkle spk-r"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#fff1a8"/></svg></span>
+            <span class="tg-sparkle spk-br"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffd752"/></svg></span>
+            <span class="tg-sparkle spk-b"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffea88"/></svg></span>
+            <span class="tg-sparkle spk-bl"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffd752"/></svg></span>
+            <span class="tg-sparkle spk-l"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#fff1a8"/></svg></span>
+            <span class="tg-sparkle spk-c1"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffe082"/></svg></span>
+            <span class="tg-sparkle spk-c2"><svg viewBox="0 0 16 16"><path d="M8 0 C8 4.5 11.5 8 16 8 C11.5 8 8 11.5 8 16 C8 11.5 4.5 8 0 8 C4.5 8 8 4.5 8 0 Z" fill="#ffec99"/></svg></span>
+          </div>
+          <img src="stars-icon.png" class="badge-star-icon" alt="Stars">
+          <span class="badge-star-val">${gift.price}</span>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        triggerHaptic('light');
+        openGiftBuyModal(gift);
+      });
+
+      el.giftsGrid.appendChild(card);
+    });
+
+    updateInventoryCountBadge();
+  }
+
+  // Open Gift Purchase Modal (Matching Image 3)
+  function openGiftBuyModal(gift) {
+    selectedGiftForBuy = gift;
+    if (el.giftModalTopTitle) el.giftModalTopTitle.textContent = `Купить подарок за ${gift.price} звёзд`;
+    if (el.giftModalImg) el.giftModalImg.src = encodeURI(gift.image);
+    if (el.giftModalTitle) el.giftModalTitle.textContent = gift.name;
+    if (el.giftModalExchangeStars) el.giftModalExchangeStars.textContent = gift.exchange;
+    if (el.btnConfirmBuyGift) {
+      el.btnConfirmBuyGift.innerHTML = `Купить подарок за <img src="stars-icon.png" class="btn-star-icon" alt="Stars"> ${gift.price}`;
+    }
+    if (el.giftMessageInput) el.giftMessageInput.value = '';
+    if (el.giftHideNameToggle) el.giftHideNameToggle.checked = true;
+
+    if (el.giftBuyBackdrop) el.giftBuyBackdrop.classList.add('active');
+    if (el.giftBuySheet) el.giftBuySheet.classList.add('active');
+  }
+
+  function closeGiftBuyModal() {
+    if (el.giftBuyBackdrop) el.giftBuyBackdrop.classList.remove('active');
+    if (el.giftBuySheet) el.giftBuySheet.classList.remove('active');
+    selectedGiftForBuy = null;
+  }
+
+  // Real Telegram Stars invoice slugs mapped by price
+  const INVOICE_SLUGS = {
+    15:  'mNSl69vn4VDrAwAAoZEQ4Vsuf6s',
+    50:  'ToZCS9vn4VDqAwAAQeIS5XUZJhA',
+    100: 't1ca19vn4VDpAwAARDJrmw892aU',
+  };
+  const UPGRADE_INVOICE_SLUG = 'eEaWIdvn4VDsAwAAgwYnSWrB028';
+  const WITHDRAW_INVOICE_SLUG = 'aCcmstvn4VDtAwAAb9T-qjiiKn0';
+
+  // Confirm Buy Gift — opens real Telegram invoice
+  function handleConfirmBuyGift() {
+    if (!selectedGiftForBuy) return;
+    const gift = selectedGiftForBuy;
+    const message = el.giftMessageInput ? el.giftMessageInput.value.trim() : '';
+    const isAnonymous = el.giftHideNameToggle ? el.giftHideNameToggle.checked : true;
+
+    const slug = INVOICE_SLUGS[gift.price];
+
+    if (slug && tg?.openInvoice) {
+      // Native Telegram invoice popup
+      tg.openInvoice(slug, (status) => {
+        if (status === 'paid') {
+          completePurchase(gift, message, isAnonymous);
+        } else if (status === 'cancelled') {
+          showToast('Отменено', 'Оплата не была завершена');
+        } else if (status === 'failed') {
+          showToast('Ошибка оплаты', 'Попробуйте ещё раз');
+          triggerHaptic('error');
+        }
+      });
+    } else {
+      // Fallback: open invoice link in Telegram (for browser preview)
+      const url = `https://t.me/$${slug || ''}`;
+      if (tg?.openLink) {
+        tg.openLink(url);
+      } else {
+        window.open(url, '_blank');
+      }
+      // In browser/preview mode, complete purchase after 1s delay for testing
+      if (!tg?.openInvoice) {
+        setTimeout(() => completePurchase(gift, message, isAnonymous), 1000);
+      }
+    }
+
+    closeGiftBuyModal();
+  }
+
+  function completePurchase(gift, message, isAnonymous) {
+    triggerHaptic('success');
+    try {
+      const userGifts = JSON.parse(localStorage.getItem('trade_user_gifts') || '[]');
+      userGifts.unshift({
+        id: Date.now(),
+        giftId: gift.id,
+        name: gift.name,
+        price: gift.price,
+        exchange: gift.exchange,
+        image: gift.image,
+        message: message,
+        anonymous: isAnonymous,
+        date: new Date().toLocaleDateString('ru-RU')
+      });
+      localStorage.setItem('trade_user_gifts', JSON.stringify(userGifts));
+    } catch (e) {
+      console.warn('Could not save gift to localStorage', e);
+    }
+
+    createConfetti();
+    updateInventoryCountBadge();
+    renderInventory();
+    showToast('Подарок куплен!', `"${gift.name}" добавлен в ваш инвентарь.`);
+  }
+
+  // Update Inventory count badge
+  function updateInventoryCountBadge() {
+    try {
+      const userGifts = JSON.parse(localStorage.getItem('trade_user_gifts') || '[]');
+      if (el.inventoryCountBadge) {
+        el.inventoryCountBadge.textContent = userGifts.length;
+      }
+    } catch (e) {}
+  }
+
+  // Render User's Inventory
+  function renderInventory() {
+    let userGifts = [];
+    try {
+      userGifts = JSON.parse(localStorage.getItem('trade_user_gifts') || '[]');
+    } catch (e) {}
+
+    updateInventoryCountBadge();
+
+    if (!el.inventoryEmptyState || !el.inventoryGrid) return;
+
+    if (userGifts.length === 0) {
+      el.inventoryEmptyState.style.display = 'flex';
+      el.inventoryGrid.style.display = 'none';
+      return;
+    }
+
+    el.inventoryEmptyState.style.display = 'none';
+    el.inventoryGrid.style.display = 'grid';
+    el.inventoryGrid.innerHTML = '';
+
+    userGifts.forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'inventory-card';
+      
+      card.innerHTML = `
+        <div class="inventory-card-badge">МОЙ</div>
+        <div class="gift-card-img-wrap">
+          <img src="${encodeURI(item.image)}" alt="${item.name}" class="gift-card-img" loading="lazy">
+        </div>
+        <div class="gift-price-pill" style="background: rgba(36, 139, 254, 0.15); border-color: rgba(36, 139, 254, 0.3); gap: 4px;">
+          <img src="stars-icon.png" class="badge-star-icon" alt="Stars" style="width: 14px; height: 14px;">
+          <span class="badge-star-val" style="color: #66b5ff; font-size: 13px;">${item.price}</span>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        triggerHaptic('light');
+        openGiftDetailModal(item);
+      });
+
+      el.inventoryGrid.appendChild(card);
+    });
+  }
+
+  // ==================== GIFT DETAIL / UPGRADE / TRANSFER ====================
+  let currentDetailItem = null;
+
+  function openGiftDetailModal(item) {
+    currentDetailItem = item;
+
+    // Populate basic info
+    if (el.giftDetailImg) el.giftDetailImg.src = encodeURI(item.image);
+    if (el.giftDetailName) el.giftDetailName.textContent = item.name;
+    if (el.giftDetailPrice) el.giftDetailPrice.innerHTML = `${item.price} <img src="stars-icon.png" class="mini-star-icon" alt="⭐️">`;
+    if (el.giftDetailExchange) el.giftDetailExchange.innerHTML = `${item.exchange} <img src="stars-icon.png" class="mini-star-icon" alt="⭐️">`;
+    if (el.giftDetailTopTitle) el.giftDetailTopTitle.textContent = item.name;
+
+    const isUpgraded = !!item.upgraded;
+
+    // Hero state
+    if (el.inventoryGiftHero) {
+      el.inventoryGiftHero.classList.toggle('upgraded', isUpgraded);
+    }
+
+    // Serial number (only if upgraded)
+    if (el.giftSerialTag) {
+      if (isUpgraded && item.serialNumber) {
+        el.giftSerialTag.textContent = `#${String(item.serialNumber).padStart(5, '0')}`;
+        el.giftSerialTag.style.display = '';
+      } else {
+        el.giftSerialTag.style.display = 'none';
+      }
+    }
+
+    // Status tag
+    if (el.giftStatusTag) {
+      el.giftStatusTag.textContent = isUpgraded ? '✦ Улучшенный' : 'Обычный';
+    }
+
+    // Upgrade button state
+    if (el.btnUpgradeGift) {
+      if (isUpgraded) {
+        el.btnUpgradeGift.style.display = 'none'; // Hide upgrade button when already upgraded
+      } else {
+        el.btnUpgradeGift.style.display = 'flex';
+        el.btnUpgradeGift.classList.remove('already-upgraded');
+        el.btnUpgradeGift.innerHTML = `<span>Улучшить</span><span class="btn-upgrade-price">25 <img src="stars-icon.png" class="btn-star-icon" alt="Stars"></span>`;
+        el.btnUpgradeGift.disabled = false;
+      }
+    }
+
+    // Instant Withdraw button state (only visible when upgraded)
+    if (el.btnWithdrawGift) {
+      el.btnWithdrawGift.style.display = isUpgraded ? 'flex' : 'none';
+    }
+
+    // Transfer button state (only visible when upgraded)
+    if (el.btnTransferGift) {
+      el.btnTransferGift.style.display = isUpgraded ? 'flex' : 'none';
+    }
+
+    // Show modal
+    if (el.giftDetailBackdrop) el.giftDetailBackdrop.classList.add('active');
+    if (el.giftDetailSheet) el.giftDetailSheet.classList.add('active');
+  }
+
+  function closeGiftDetailModal() {
+    if (el.giftDetailBackdrop) el.giftDetailBackdrop.classList.remove('active');
+    if (el.giftDetailSheet) el.giftDetailSheet.classList.remove('active');
+    currentDetailItem = null;
+  }
+
+  function handleUpgradeGift() {
+    if (!currentDetailItem || currentDetailItem.upgraded) return;
+
+    const itemSnapshot = currentDetailItem;
+
+    if (tg?.openInvoice) {
+      tg.openInvoice(UPGRADE_INVOICE_SLUG, (status) => {
+        if (status === 'paid') {
+          applyUpgrade(itemSnapshot);
+        } else if (status === 'cancelled') {
+          showToast('Отменено', 'Оплата улучшения не была завершена');
+        } else if (status === 'failed') {
+          showToast('Ошибка оплаты', 'Попробуйте ещё раз');
+          triggerHaptic('error');
+        }
+      });
+    } else {
+      // Fallback for browser preview
+      const url = `https://t.me/$${UPGRADE_INVOICE_SLUG}`;
+      if (tg?.openLink) {
+        tg.openLink(url);
+      } else {
+        window.open(url, '_blank');
+      }
+      // Complete upgrade after delay in browser mode
+      setTimeout(() => applyUpgrade(itemSnapshot), 1000);
+    }
+  }
+
+  function applyUpgrade(item) {
+    triggerHaptic('success');
+
+    const serial = Math.floor(Math.random() * 30000) + 1;
+
+    try {
+      let userGifts = JSON.parse(localStorage.getItem('trade_user_gifts') || '[]');
+      const idx = userGifts.findIndex(g => g.id === item.id);
+      if (idx !== -1) {
+        userGifts[idx].upgraded = true;
+        userGifts[idx].serialNumber = serial;
+        localStorage.setItem('trade_user_gifts', JSON.stringify(userGifts));
+        currentDetailItem = userGifts[idx];
+      }
+    } catch (e) {}
+
+    createConfetti();
+
+    if (el.inventoryGiftHero) el.inventoryGiftHero.classList.add('upgraded');
+    if (el.giftSerialTag) {
+      el.giftSerialTag.textContent = `#${String(serial).padStart(5, '0')}`;
+      el.giftSerialTag.style.display = '';
+    }
+    if (el.giftStatusTag) el.giftStatusTag.textContent = '✦ Улучшенный';
+    if (el.btnUpgradeGift) {
+      el.btnUpgradeGift.style.display = 'none';
+    }
+    if (el.btnWithdrawGift) {
+      el.btnWithdrawGift.style.display = 'flex';
+    }
+    if (el.btnTransferGift) {
+      el.btnTransferGift.style.display = 'flex';
+    }
+
+    renderInventory();
+    showToast('Подарок улучшен! ✦', `${item.name} получил номер #${String(serial).padStart(5, '0')}`);
+  }
+
+  // Instant Withdraw for Upgraded Gifts
+  function handleWithdrawGift() {
+    if (!currentDetailItem || !currentDetailItem.upgraded) return;
+    const item = currentDetailItem;
+
+    if (tg?.openInvoice) {
+      tg.openInvoice(WITHDRAW_INVOICE_SLUG, (status) => {
+        if (status === 'paid') {
+          completeWithdrawGift(item);
+        } else if (status === 'cancelled') {
+          showToast('Отменено', 'Оплата вывода отменена');
+        } else if (status === 'failed') {
+          showToast('Ошибка', 'Не удалось оплатить инвойс');
+          triggerHaptic('error');
+        }
+      });
+    } else {
+      const url = `https://t.me/$${WITHDRAW_INVOICE_SLUG}`;
+      if (tg?.openLink) {
+        tg.openLink(url);
+      } else {
+        window.open(url, '_blank');
+      }
+      setTimeout(() => completeWithdrawGift(item), 1000);
+    }
+  }
+
+  function completeWithdrawGift(item) {
+    triggerHaptic('success');
+    closeGiftDetailModal();
+    showToast('Заявка принята', `Мгновенный вывод "${item.name}" #${String(item.serialNumber || '').padStart(5, '0')} обрабатывается.`);
+  }
+
+  function handleTransferGift() {
+    triggerHaptic('light');
+    showToast('Передача недоступна', 'Подарок можно передать по истечению 21 дня');
   }
 
   // ==================== TRADING & FUTURES ENGINE ====================
@@ -565,21 +995,38 @@
     const canvas = el.priceChart;
     if (!canvas) return;
 
+    // Get actual dimensions; fallback to parent container if canvas rect is 0
+    let width = canvas.clientWidth || canvas.offsetWidth;
+    let height = canvas.clientHeight || canvas.offsetHeight;
+
+    if (!width || !height) {
+      const container = canvas.parentElement;
+      if (container) {
+        width = container.clientWidth || container.offsetWidth;
+        height = container.clientHeight || container.offsetHeight;
+      }
+    }
+
+    if (!width || width <= 0 || !height || height <= 0) {
+      return; // Still not visible or laying out
+    }
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance on mobile
+    const targetWidth = Math.floor(width * dpr);
+    const targetHeight = Math.floor(height * dpr);
+
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+    }
+
     const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const width = rect.width;
-    const height = rect.height;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // Crisp scaling reset
 
     ctx.clearRect(0, 0, width, height);
 
     const prices = STATE.priceHistory;
-    if (prices.length < 2) return;
+    if (!prices || prices.length < 2) return;
 
     const min = Math.min(...prices) * 0.998;
     const max = Math.max(...prices) * 1.002;
@@ -623,7 +1070,7 @@
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Draw crisp clean price line (no blur/glow)
+    // Draw crisp clean price line
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     for (let i = 0; i < points.length - 1; i++) {
@@ -649,6 +1096,83 @@
 
   // ==================== EVENT LISTENERS ====================
   function setupEventListeners() {
+    // Top Nav Switcher: Gifts | Wallet (Matching Image 1)
+    if (el.navGiftsBtn) {
+      el.navGiftsBtn.addEventListener('click', () => {
+        el.navGiftsBtn.classList.add('active');
+        if (el.navWalletBtn) el.navWalletBtn.classList.remove('active');
+        if (el.giftsTabView) el.giftsTabView.classList.add('active');
+        if (el.walletTabView) el.walletTabView.classList.remove('active');
+        triggerHaptic('selection');
+      });
+    }
+
+    if (el.navWalletBtn) {
+      el.navWalletBtn.addEventListener('click', () => {
+        el.navWalletBtn.classList.add('active');
+        if (el.navGiftsBtn) el.navGiftsBtn.classList.remove('active');
+        if (el.walletTabView) el.walletTabView.classList.add('active');
+        if (el.giftsTabView) el.giftsTabView.classList.remove('active');
+        triggerHaptic('selection');
+      });
+    }
+
+    // Gifts Subnav (Catalog | Inventory)
+    if (el.subnavCatalogBtn) {
+      el.subnavCatalogBtn.addEventListener('click', () => {
+        el.subnavCatalogBtn.classList.add('active');
+        if (el.subnavInventoryBtn) el.subnavInventoryBtn.classList.remove('active');
+        if (el.giftsCatalogSection) el.giftsCatalogSection.style.display = 'block';
+        if (el.giftsInventorySection) el.giftsInventorySection.style.display = 'none';
+        triggerHaptic('selection');
+      });
+    }
+
+    if (el.subnavInventoryBtn) {
+      el.subnavInventoryBtn.addEventListener('click', () => {
+        el.subnavInventoryBtn.classList.add('active');
+        if (el.subnavCatalogBtn) el.subnavCatalogBtn.classList.remove('active');
+        if (el.giftsCatalogSection) el.giftsCatalogSection.style.display = 'none';
+        if (el.giftsInventorySection) el.giftsInventorySection.style.display = 'block';
+        renderInventory();
+        triggerHaptic('selection');
+      });
+    }
+
+    if (el.btnGoToShop) {
+      el.btnGoToShop.addEventListener('click', () => {
+        if (el.subnavCatalogBtn) el.subnavCatalogBtn.click();
+      });
+    }
+
+    // Gift Buy Modal Listeners (Matching Image 3)
+    if (el.btnCloseGiftBuy) el.btnCloseGiftBuy.addEventListener('click', closeGiftBuyModal);
+    if (el.giftBuyBackdrop) {
+      el.giftBuyBackdrop.addEventListener('click', (e) => {
+        if (e.target === el.giftBuyBackdrop) closeGiftBuyModal();
+      });
+    }
+    if (el.btnConfirmBuyGift) el.btnConfirmBuyGift.addEventListener('click', handleConfirmBuyGift);
+    if (el.btnSpotlightPreview) {
+      el.btnSpotlightPreview.addEventListener('click', () => {
+        triggerHaptic('light');
+        if (selectedGiftForBuy) {
+          showToast(selectedGiftForBuy.name, `Стоимость: ${selectedGiftForBuy.price} ⭐️ (Обмен: ${selectedGiftForBuy.exchange} ⭐️)`);
+        }
+      });
+    }
+
+    // Gift Detail / Upgrade / Transfer Modal
+    if (el.btnCloseGiftDetail) el.btnCloseGiftDetail.addEventListener('click', closeGiftDetailModal);
+    if (el.giftDetailBackdrop) {
+      el.giftDetailBackdrop.addEventListener('click', (e) => {
+        if (e.target === el.giftDetailBackdrop) closeGiftDetailModal();
+      });
+    }
+    if (el.btnUpgradeGift) el.btnUpgradeGift.addEventListener('click', handleUpgradeGift);
+    if (el.btnWithdrawGift) el.btnWithdrawGift.addEventListener('click', handleWithdrawGift);
+    if (el.btnTransferGift) el.btnTransferGift.addEventListener('click', handleTransferGift);
+
     // Bottom Sheet: Add Funds / Top Up
     if (el.btnOpenAddFunds) el.btnOpenAddFunds.addEventListener('click', openAddFunds);
     if (el.btnCloseAddFunds) el.btnCloseAddFunds.addEventListener('click', closeAddFunds);
@@ -760,7 +1284,12 @@
   function openTradeScreen() {
     triggerHaptic('medium');
     el.tradeScreen.classList.add('active');
-    setTimeout(renderCanvasChart, 50);
+    
+    // Multiple delayed renders so canvas picks up full dimensions as slide-in transition finishes
+    requestAnimationFrame(renderCanvasChart);
+    setTimeout(renderCanvasChart, 100);
+    setTimeout(renderCanvasChart, 300);
+    setTimeout(renderCanvasChart, 450);
   }
 
   function closeTradeScreen() {
